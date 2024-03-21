@@ -1,0 +1,99 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .breadcrumbs a {
+    @apply text-blue-600 hover:text-blue-500 hover:underline;
+  }
+  .primary-btn {
+    @apply border border-primary rounded px-4 py-1 text-primary hover:text-white hover:bg-primary shadow-lg hover:shadow;
+  }
+  .link {
+    @apply hover:text-primary text-secondary hover:underline;
+  }
+}
+
+body {
+  font-family: "Noto Sans JP", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+  color: #222;
+}
+.se-component img {
+  width: auto !important;
+  height: auto !important;
+  max-width: 100% !important;
+}
+.sun-editor-editable {
+  font-family: inherit !important;
+  font-size: inherit !important;
+  color: #333;
+  background-color: #fff;
+  line-height: 1.5;
+  word-break: normal;
+  word-wrap: break-word;
+  padding: 16px;
+  margin: 0;
+}
+.skeleton-box {
+  display: inline-block;
+  height: 1em;
+  position: relative;
+  overflow: hidden;
+  background-color: #dddbdd;
+}
+.skeleton-box::after {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  transform: translateX(-100%);
+  background-image: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0,
+    rgba(255, 255, 255, 0.2) 20%,
+    rgba(255, 255, 255, 0.5) 60%,
+    rgba(255, 255, 255, 0)
+  );
+  -webkit-animation: shimmer 5s infinite;
+  animation: shimmer 5s infinite;
+  content: "";
+}
+@-webkit-keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.sun-editor-editable p {
+  margin-bottom: 16px !important;
+}
+.posts-content p {
+  margin-bottom: 1rem;
+}
+.se-wrapper {
+  position: relative !important;
+  width: 100%;
+  height: auto;
+  overflow: hidden;
+  z-index: 1;
+  padding: 8px !important;
+}
+.sun-editor-editable {
+  font-family: inherit !important;
+  font-size: 16px !important;
+  color: #333;
+  background-color: #fff;
+  line-height: 1.5;
+  word-break: normal;
+  word-wrap: break-word;
+  padding: 0px;
+  margin: 0;
+}
