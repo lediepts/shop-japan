@@ -8,10 +8,19 @@ export interface IUser {
 export interface ICategory {
   _id: string;
   name: string;
-  alias: string;
 }
 export interface ITrademark {
   _id: string;
   name: string;
   logo?: string;
+}
+export interface IProduct {
+  _id: string;
+  name: string;
+  description: string;
+  image: string[];
+  price: number;
+  categoryId: string;
+  trademarkId: string;
+  other?: string;
 }

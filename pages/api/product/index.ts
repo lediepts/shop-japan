@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import dbConnect from "../../../lib/dbConnect";
-import Category from "../../../models/Category";
+import Product from "../../../models/Product";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]";
 
@@ -8,10 +8,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const {
-    method,
-    body: { name },
-  } = req;
+  const { method, body } = req;
   const session = await getServerSession(req, res, authOptions);
   if (!session) return res.status(401).end();
   await dbConnect();
@@ -19,18 +16,18 @@ export default async function handler(
   switch (method) {
     case "GET":
       try {
-        const categories = await Category.find(
+        const products = await Product.find(
           {}
         ); /* find all the data in our database */
-        res.status(200).json(categories);
+        res.status(200).json(products);
       } catch (error) {
         res.status(400).json([]);
       }
       break;
     case "POST":
       try {
-        const category = await Category.create({ name });
-        res.status(201).json(category);
+        const product = await Product.create(body);
+        res.status(201).json(product);
       } catch (error) {
         res.status(400).end();
       }

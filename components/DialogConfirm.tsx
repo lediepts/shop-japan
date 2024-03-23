@@ -73,10 +73,7 @@ export default function DialogConfirm({
           "& .MuiPaper-root": {
             opacity: 0.98,
             margin: 1,
-            width: {
-              sm: "100%",
-              md: "95%",
-            },
+            width: "95%",
           },
         }}
       >

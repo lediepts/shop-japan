@@ -14,7 +14,6 @@ export default function Document() {
           rel="stylesheet"
         />
         <script src="https://cdn.jsdelivr.net/npm/suneditor@latest/dist/suneditor.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/suneditor@latest/src/lang/ja.js"></script>
       </Head>
       <body>
         <Main />
