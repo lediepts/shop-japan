@@ -2,14 +2,15 @@ import { useSession } from "next-auth/react";
 import Header from "./Header";
 import NotFound from "./NotFound";
 import { usePathname } from "next/navigation";
+import { ReactElement } from "react";
 
-export default function Layout({ children }: any) {
+export default function Layout({ children }:{children:ReactElement<any, any>| string}) {
   const pathname = usePathname();
   const { status, data } = useSession({
     required: !/^\/auth[\s\S]+/g.test(pathname),
   });
   if (status === "loading") {
-    return "Loading or not authenticated...";
+    return <>Loading or not authenticated...</>;
   }
   if (status === "authenticated" && !data) return <NotFound />;
   return (
