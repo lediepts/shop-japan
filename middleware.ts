@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const allowedOrigins = [
-  "*"
-];
+const allowedOrigins = ["https://hoaisunny.vercel.app"];
 
 const corsOptions = {
   "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
