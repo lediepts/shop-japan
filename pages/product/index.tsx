@@ -1,20 +1,11 @@
 import dbConnect from "@/dbConnect";
-import { yupResolver } from "@hookform/resolvers/yup";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
-import {
-  Box,
-  Button,
-  IconButton,
-  Stack,
-  TextField,
-  Tooltip,
-} from "@mui/material";
+import { Box, Button, IconButton, Stack, Tooltip } from "@mui/material";
 import axios from "axios";
 import { format } from "date-fns";
 import {
-  MRT_Row,
   MaterialReactTable,
   useMaterialReactTable,
   type MRT_ColumnDef,
@@ -22,21 +13,37 @@ import {
 import { MRT_Localization_VI } from "material-react-table/locales/vi";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { toCsv } from "react-csv-downloader";
-import { SubmitHandler, useForm } from "react-hook-form";
-import * as yup from "yup";
-import DialogConfirm from "../../components/DialogConfirm";
-import Product from "../../models/Product";
-import { ICategory, IProduct, ITrademark } from "../../types/interface";
 import Category from "../../models/Category";
+import Product from "../../models/Product";
 import Trademark from "../../models/Trademark";
+import { ICategory, IProduct, ITrademark } from "../../types/interface";
 
 const noImage = `data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAACXBIWXMAAAsTAAALEwEAmpwYAAAEcElEQVR4nO1aS6gcRRSd+P+ulIifGH8rMeBvIYiJih9UhAiOyZu6nQExE1CfKEHw9b1N+wE/4EZEjMaIC1GXigEXfnAhCkHFjSuJQhTJIipE3szc25qSWz0zjpN5M857PV1Ppw4UU9XV1V3nTN1bVbe6UgkICAgICAgICPhvY2u6eI5J5LrKLALS1iWA8qOmyqyhnrYuMCg/AHEzwuymyiyhHshL+OejsoZ9LcluAOK9gPKl72SIDwGJdb+D9cR7DWbXF25rQNw0xIe9kic5oMS1LyPEOaz1NWyuL0yACDnSF/v0sr2pboy317q8rxwV9/JEGvrQWiJXjbu30bDHG+THdWFSNnmF9tGNkkQapQiQpvYYQHlgLrVnajkivqJjn/dpufqIPRmIn1jukJyEvBcBorR5fm6X8s4wAQD5SVeO23dNm7wXARRKXuu3YHPdoAl0PPZX1ao9tjJl8iUKYNcA8TMmzu7Qkg5/vUfN4ai2mN24LV48V/MmlmsMyes6aqZBvjQB6qk9CYh/7UxJu3ovJ95gSF4D4i8MybsGeU7F0jo1CSA+Yojbo5zpSsiXagJbsLkOSN4A5Oe1HFF2u5IDlP2AsgeQP3EdQdmt9Yb4HoPythKcFnlvPmB+3p4IxD8b4g90dPQ6g7zdzclJduvYdxRAvhQBGrmTe9agvAKxPKT1Gohw9TFfflRbkm8N8st5vr1Z2xniF/rXCUWRL0UASO1aQP7FTW0o37iXxtltrpwunjfY1iB/akjedM9R03DtuFVD2Vg0eW8mYGJ7NhD/USPZ+Y/OpK2L3B4iloeHPrdg8qULEMVydS2RazVvkF8EZNZVn053gGwMyfcarbn3UXt6GeRLEyDV5S/xLjetIX+u15xvIH7O7dTylaGuBj8GbF1YFvnSBKim9gS3NVWbTu3a/nsbqT0FFviywetlkPfnA5DnDPJvXdK5h88XQEWR11GnjlNnnGErTm8CVFN7GhAfNCQ/6b+fOz4d/u27iyKvPgSQP+qaluaH+RUvAtRdtEgjNe3NS3WgAPKfdZbRT2nSvF4bJoIXE+jH1gV7llsVduJyRZGHRB7sXtf8UiJ4F6Afo8ibmK/U3aSaUGUC8uNEWDUCwBLk8wgSv9SbKlG+U78xCflRIqwKAWAk+Xw5DCRvGZQdBnlRfcg2bF08CflhImxK7XHeBYB/Qx5lT3cq04BJVwTdTE1CvguTyP3aXgMzXgWACcn32vVE4COTkh+ENwFgmeS7w96gfL1S8t4EqC95SmvXaCxgFHnYaU/VLXO+r5D5lfbVy0LIrBLy5QVEqBsQ9ZJe7To+g/xn387zUPSYPaO8kBjxh30HlbtdqKuEBHH7Tu2Tzhg6wv6u46enNg1GncNRg9ktZWxpVwJIsps7IwIKe2gNm+s1jgfIv489n/f/7YA7Hh93+LIMEWQjIO8bdz7vP/H7USKbKkWjHj5IkvBBUrTKHN7UUZ/lYa8AlPdmlrzCLLQv1RC3KwQEBAQEBAQEBFT+V/gLekIrfWmA73EAAAAASUVORK5CYII=`;
-export default function Index({
-  data: { products, categories, trademarks },
-}: InferGetStaticPropsType<typeof getStaticProps>) {
-  const [data, setData] = useState(products);
+export default function Index() {
+  const [state, setState] = useState("init");
+  const [data, setData] = useState<IProduct[]>([]);
+  const [trademarks, setTrademarks] = useState<ITrademark[]>([]);
+  const [categories, setCategories] = useState<ICategory[]>([]);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const { data: products } = await axios<IProduct[]>("/api/product");
+        const { data: tm } = await axios<ITrademark[]>("/api/trademark");
+        const { data: ct } = await axios<ICategory[]>("/api/category");
+        setData(products);
+        setCategories(ct);
+        setTrademarks(tm);
+      } catch (err) {
+        console.log(err);
+      } finally {
+        setState("finished");
+      }
+    })();
+  }, []);
+
   const columns = useMemo<MRT_ColumnDef<IProduct>[]>(
     () => [
       {
@@ -207,29 +214,13 @@ export default function Index({
           Xuất dữ liệu sang excel
         </Button>
       </Stack>
-      <MaterialReactTable table={table} />
+      {state === "finished" ? (
+        <MaterialReactTable table={table} />
+      ) : (
+        <div className="h-44 skeleton-box flex items-center justify-center">
+          <p className="text-center">Đang tải dữ liệu...</p>
+        </div>
+      )}
     </div>
   );
 }
-
-export const getStaticProps = (async () => {
-  await dbConnect();
-  const categories = (
-    (await Category.find().sort({ name: -1 }).lean().exec()) as ICategory[]
-  ).map((v) => ({ ...v, _id: v._id.toString() }));
-  const trademarks = (
-    (await Trademark.find().sort({ name: -1 }).lean().exec()) as ITrademark[]
-  ).map((v) => ({ ...v, _id: v._id.toString() }));
-  const products = (
-    (await Product.find().sort({ name: -1 }).lean().exec()) as IProduct[]
-  ).map((v) => ({ ...v, _id: v._id.toString() }));
-  return {
-    props: {
-      data: {
-        products,
-        categories,
-        trademarks,
-      },
-    },
-  };
-}) satisfies GetStaticProps;

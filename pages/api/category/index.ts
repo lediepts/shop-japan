@@ -3,6 +3,7 @@ import dbConnect from "../../../lib/dbConnect";
 import Category from "../../../models/Category";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]";
+import { ICategory } from "../../../types/interface";
 
 export default async function handler(
   req: NextApiRequest,
@@ -19,9 +20,12 @@ export default async function handler(
   switch (method) {
     case "GET":
       try {
-        const categories = await Category.find(
-          {}
-        ); /* find all the data in our database */
+        const categories = (
+          (await Category.find()
+            .sort({ name: -1 })
+            .lean()
+            .exec()) as ICategory[]
+        ).map((v) => ({ ...v, _id: v._id.toString() }));
         res.status(200).json(categories);
       } catch (error) {
         res.status(400).json([]);

@@ -1,7 +1,8 @@
 import { NextApiRequest, NextApiResponse } from "next";
+import { getServerSession } from "next-auth";
 import dbConnect from "../../../lib/dbConnect";
 import Product from "../../../models/Product";
-import { getServerSession } from "next-auth";
+import { IProduct } from "../../../types/interface";
 import { authOptions } from "../auth/[...nextauth]";
 
 export const config = {
@@ -25,9 +26,9 @@ export default async function handler(
   switch (method) {
     case "GET":
       try {
-        const products = await Product.find(
-          {}
-        ); /* find all the data in our database */
+        const products = (
+          (await Product.find().sort({ name: -1 }).lean().exec()) as IProduct[]
+        ).map((v) => ({ ...v, _id: v._id.toString() }));
         res.status(200).json(products);
       } catch (error) {
         res.status(400).json([]);
