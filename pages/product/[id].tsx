@@ -304,7 +304,6 @@ export const getStaticProps = (async ({ params }) => {
   await dbConnect();
   const id = (params as any).id as string;
   const product = (await Product.findById(id).lean().exec()) as IProduct;
-  console.log(product);
   const categories = (
     (await Category.find().sort({ name: -1 }).lean().exec()) as ICategory[]
   ).map((v) => ({ ...v, _id: v._id.toString() }));

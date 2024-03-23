@@ -65,7 +65,7 @@ export default function UploadImage({ value, onChange }: Props) {
         <form ref={form}>
           <input
             hidden
-            accept=".jpg,.jpeg,.png,.webp,.svg"
+            accept="image/*"
             multiple
             type="file"
             onChange={async (e) => {

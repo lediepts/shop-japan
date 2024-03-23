@@ -4,6 +4,15 @@ import Product from "../../../models/Product";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]";
 
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: "10mb",
+    },
+  },
+  // Specifies the maximum allowed duration for this function to execute (in seconds)
+  maxDuration: 5,
+};
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
